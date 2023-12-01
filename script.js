@@ -1,4 +1,4 @@
-fetch("https://imdb146.p.rapidapi.com/v1/find/?query=sexo", {
+fetch("https://imdb146.p.rapidapi.com/v1/find/?query=hola", {
     method: 'GET',
     headers: {
     'X-RapidAPI-Key': 'b564a578c9msh60fbef2a59512e9p1b9cffjsn3e5dc1fac960',
