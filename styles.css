@@ -20,9 +20,12 @@
     border: solid green 1px;
 }
 
+.poster-pelicula {
+    height: 70%;
+}
+
 .poster-pelicula img{
     width: 100%;
-    height: 80%;
     border: solid blue 1px;
 }
 
