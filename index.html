@@ -15,6 +15,7 @@
 
     <div class="master-container">
         
+      <!-- Barra de navegación -->
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #fd7e14;">
             <div class="container-fluid">
               <a class="navbar-brand" href="#">Movie & Shows Manager</a>
@@ -34,11 +35,15 @@
             </div>
         </nav>
 
-        <div class="movies-container"></div>
+        <!-- Contenedor de películas -->
+        <div class="movies-container">
+
+        </div>
     </div>
 
+    <!-- Template para las películas -->
     <template id="template-container">
-        <div class="movie">
+        <div class="movie" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <div class="poster-pelicula">
                 <img src="" alt="">
             </div>
@@ -47,6 +52,27 @@
             </div>
         </div>
     </template>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 
 </body>
 <script src="script.js"></script>
