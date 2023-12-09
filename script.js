@@ -1,5 +1,3 @@
-var myModal = new bootstrap.Modal(document.getElementById('movieModal'));
-
 document.addEventListener('DOMContentLoaded', function () {
     const busqueda = document.querySelector("#busqueda");
     busqueda.addEventListener('input', debounce(searchMovies, 500)); // función 'Debounce' para mejor desempeño
@@ -18,8 +16,11 @@ function debounce(func, delay) { //Función para definir un intervalo de tiempo 
 async function searchMovies() { //Recibe datos de la API mediante la búsqueda; función asíncrona
     const query = busqueda.value.trim();
 
+    const contenedor_de_peliculas = document.querySelector(".movies-container");
+
     if (query === '') { //Si la barra de búsqueda está vacía...
         console.log("empty query!");
+        contenedor_de_peliculas.innerHTML = "";
         return;
     }
 
@@ -74,7 +75,7 @@ function getMovies(peliculas) { //Función que recibe los datos de las película
             posterPelicula.setAttribute("src", "https://image.tmdb.org/t/p/original" + imagen);
         }
 
-        template.addEventListener('click', () => loadDetailsModalMovie(pelicula));
+        // template.addEventListener('click', () => loadDetailsModalMovie(pelicula));
 
         fragmento.appendChild(template);
     });
@@ -82,6 +83,14 @@ function getMovies(peliculas) { //Función que recibe los datos de las película
     const contenedor_de_peliculas = document.querySelector(".movies-container");
     // contenedor_de_peliculas.innerHTML = "";
     contenedor_de_peliculas.appendChild(fragmento);
+
+    contenedor_de_peliculas.addEventListener('click', function (event) {
+        const movieElement = event.target.closest('.movie');
+        if (movieElement) {
+            const movieData = peliculas.results.find(movie => movie.title === movieElement.querySelector("p").textContent);
+            loadDetailsModalMovie(movieData);
+        }
+    });
 }
 
 function getTv(series) { //Función que recibe los datos de las series y los maqueta con #template
@@ -108,7 +117,7 @@ function getTv(series) { //Función que recibe los datos de las series y los maq
             posterSerie.setAttribute("src", "https://image.tmdb.org/t/p/original" + imagen);
         }
 
-        template.addEventListener('click', () => loadDetailsModalTV(serie));
+        // template.addEventListener('click', () => loadDetailsModalTV(serie));
 
         fragmento.appendChild(template);
     });
@@ -116,6 +125,14 @@ function getTv(series) { //Función que recibe los datos de las series y los maq
     const contenedor_de_peliculas = document.querySelector(".movies-container");
     // contenedor_de_peliculas.innerHTML = "";
     contenedor_de_peliculas.appendChild(fragmento);
+
+    contenedor_de_peliculas.addEventListener('click', function (event) {
+        const tvElement = event.target.closest('.movie');
+        if (tvElement) {
+            const tvData = series.results.find(tv => tv.name === tvElement.querySelector("p").textContent);
+            loadDetailsModalTV(tvData);
+        }
+    });
 }
 
 function clearScreen() { //Limpiar la pantalla cuando se presione el botón principal
@@ -123,42 +140,40 @@ function clearScreen() { //Limpiar la pantalla cuando se presione el botón prin
     contenedor_de_peliculas.innerHTML = "";
 }
 
-function loadDetailsModalMovie(movie) {
-    const modal = document.getElementById('movieModal');
-    const modalTitle = modal.querySelector('.modal-title');
-    const modalBody = modal.querySelector('.modal-body');
+function loadDetailsModal(data, isMovie) {
+    const modalTitle = document.getElementById('movieModalLabel');
+    const modalBody = document.querySelector('.modal-body');
+    
+    modalTitle.textContent = isMovie ? data.title : data.name;
+    modalBody.innerHTML = ''; // Clear previous modal content
+    
+    const modalContent = document.createElement('div');
 
-    // Set modal title
-    modalTitle.textContent = movie.title;
+    // Check if the necessary properties exist in the data object
+    if (data.poster_path && data.overview && (isMovie ? data.release_date : data.first_air_date)) {
+        modalContent.innerHTML = `
+            <img src="https://image.tmdb.org/t/p/original${data.poster_path}" alt="${isMovie ? data.title : data.name}" class="modal-poster">
+            <p>${data.overview}</p>
+            <p>${isMovie ? 'Release Date' : 'First Air Date'}: ${isMovie ? data.release_date : data.first_air_date}</p>
+            <!-- Add more details as needed -->
+        `;
+    } else {
+        modalContent.textContent = 'Details not available.';
+    }
 
-    // Clear previous content
-    modalBody.innerHTML = '';
-
-    // Add other details as needed
-    const overview = document.createElement('p');
-    overview.textContent = movie.overview; // Adjust property based on your API response
-    modalBody.appendChild(overview);
+    modalBody.appendChild(modalContent);
 
     // Show the modal
-    myModal.show();
+    const modal = new bootstrap.Modal(document.getElementById('movieModal'));
+    // modal.show();
+}
+
+// Usage example
+function loadDetailsModalMovie(movie) {
+    loadDetailsModal(movie, true);
 }
 
 function loadDetailsModalTV(tv) {
-    const modal = document.getElementById('movieModal');
-    const modalTitle = modal.querySelector('.modal-title');
-    const modalBody = modal.querySelector('.modal-body');
-
-    // Set modal title
-    modalTitle.textContent = tv.name;
-
-    // Clear previous content
-    modalBody.innerHTML = '';
-
-    // Add other details as needed
-    const overview = document.createElement('p');
-    overview.textContent = tv.overview; // Adjust property based on your API response
-    modalBody.appendChild(overview);
-
-    // Show the modal
-    myModal.show();
+    loadDetailsModal(tv, false);
 }
+
