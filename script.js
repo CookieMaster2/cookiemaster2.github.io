@@ -2,10 +2,10 @@ import { addToPersonalCollection } from "./moviestorage.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     const busqueda = document.querySelector("#busqueda");
-    busqueda.addEventListener('input', debounce(searchMovies, 500)); // función 'Debounce' para mejor desempeño
+    busqueda.addEventListener('input', debounce(searchMovies, 500));
 });
 
-function debounce(func, delay) { //Función para definir un intervalo de tiempo entre búsquedas
+function debounce(func, delay) {
     let timeoutId;
     return function () {
         clearTimeout(timeoutId);
@@ -15,18 +15,18 @@ function debounce(func, delay) { //Función para definir un intervalo de tiempo 
     };
 }
 
-async function searchMovies() { //Recibe datos de la API mediante la búsqueda; función asíncrona
+async function searchMovies() {
     const query = busqueda.value.trim();
 
     const contenedor_de_peliculas = document.querySelector(".movies-container");
 
-    if (query === '') { //Si la barra de búsqueda está vacía...
+    if (query === '') {
         console.log("empty query!");
         contenedor_de_peliculas.innerHTML = "";
         return;
     }
 
-    const options = { //Método GET de la API para los datos
+    const options = {
         method: 'GET',
         headers: {
             accept: 'application/json',
@@ -34,110 +34,100 @@ async function searchMovies() { //Recibe datos de la API mediante la búsqueda; 
         }
     };
 
-    try { //Se reciben los datos de la API de forma paralela
+    try {
         const [movies, tv] = await Promise.all([
             fetch(`https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=true&language=es-MX&page=1`, options).then(response => response.json()),
             fetch(`https://api.themoviedb.org/3/search/tv?query=${query}&include_adult=true&language=es-MX&page=1`, options).then(response => response.json())
         ]);
 
-        getMovies(movies) //Agarra los datos de las películas, y los maqueta
-        // console.log(movies)
+        getMovies(movies);
+        getTv(tv);
 
-        getTv(tv) //Agarra los datos de las series, y los maqueta
-        // console.log(tv)
-
-    } catch (error) { //Error
-        console.log(error)
+    } catch (error) {
+        console.log(error);
     }
-
 }
 
-
-function getMovies(peliculas) { //Función que recibe los datos de las películas y las maqueta con #template
-    const template_peliculas = document.querySelector("#template-container")
-    const fragmento = document.createDocumentFragment()
+function getMovies(peliculas) {
+    const template_peliculas = document.querySelector("#template-container");
+    const fragmento = document.createDocumentFragment();
 
     peliculas.results.forEach(pelicula => {
-        const titulo = pelicula.title;
-        console.log(titulo);
-
-        const imagen = pelicula.poster_path ?? "assets/not-found.jpg";
-        console.log(imagen);
-
         const template = document.importNode(template_peliculas.content, true);
+        template.querySelector('.movie').setAttribute('data-id', `movie-${pelicula.id}`);
+        template.querySelector('.movie').setAttribute('data-type', 'movie');
 
         const nombrePelicula = template.querySelector("p");
-        nombrePelicula.textContent = titulo;
+        nombrePelicula.textContent = pelicula.title;
 
         const posterPelicula = template.querySelector(".poster-pelicula img");
+        const imagen = pelicula.poster_path ?? "assets/not-found.jpg";
 
         if (pelicula.poster_path == undefined) {
-            posterPelicula.setAttribute("src", imagen)
+            posterPelicula.setAttribute("src", imagen);
         } else {
             posterPelicula.setAttribute("src", "https://image.tmdb.org/t/p/original" + imagen);
         }
 
-        // template.addEventListener('click', () => loadDetailsModalMovie(pelicula));
-
         fragmento.appendChild(template);
     });
 
     const contenedor_de_peliculas = document.querySelector(".movies-container");
-    // contenedor_de_peliculas.innerHTML = "";
-    contenedor_de_peliculas.appendChild(fragmento);
 
     contenedor_de_peliculas.addEventListener('click', function (event) {
-        const movieElement = event.target.closest('.movie');
+        const movieElement = event.target.closest('.movie[data-type="movie"]');
         if (movieElement) {
-            const movieData = peliculas.results.find(movie => movie.title === movieElement.querySelector("p").textContent);
-            loadDetailsModalMovie(movieData);
+            const movieId = movieElement.getAttribute('data-id');
+            const isMovie = movieElement.getAttribute('data-type') === 'movie';
+            const movieData = isMovie ? peliculas.results.find(movie => `movie-${movie.id}` === movieId) : series.results.find(tv => `tv-${tv.id}` === movieId);
+            loadDetailsModal(movieData, isMovie);
         }
     });
+
+    // Append the new content instead of replacing it
+    contenedor_de_peliculas.appendChild(fragmento);
 }
 
-function getTv(series) { //Función que recibe los datos de las series y los maqueta con #template
-    const template_peliculas = document.querySelector("#template-container")
-    const fragmento = document.createDocumentFragment()
+function getTv(series) {
+    const template_peliculas = document.querySelector("#template-container");
+    const fragmento = document.createDocumentFragment();
 
     series.results.forEach(serie => {
-        const titulo = serie.name;
-        console.log(titulo);
-
-        const imagen = serie.poster_path ?? "assets/not-found.jpg";
-        console.log(imagen);
-
         const template = document.importNode(template_peliculas.content, true);
+        template.querySelector('.movie').setAttribute('data-id', `tv-${serie.id}`);
+        template.querySelector('.movie').setAttribute('data-type', 'tv');
 
         const nombreSerie = template.querySelector("p");
-        nombreSerie.textContent = titulo;
+        nombreSerie.textContent = serie.name;
 
         const posterSerie = template.querySelector(".poster-pelicula img");
+        const imagen = serie.poster_path ?? "assets/not-found.jpg";
 
         if (serie.poster_path == undefined) {
-            posterSerie.setAttribute("src", imagen)
+            posterSerie.setAttribute("src", imagen);
         } else {
             posterSerie.setAttribute("src", "https://image.tmdb.org/t/p/original" + imagen);
         }
 
-        // template.addEventListener('click', () => loadDetailsModalTV(serie));
-
         fragmento.appendChild(template);
     });
 
     const contenedor_de_peliculas = document.querySelector(".movies-container");
-    // contenedor_de_peliculas.innerHTML = "";
-    contenedor_de_peliculas.appendChild(fragmento);
 
     contenedor_de_peliculas.addEventListener('click', function (event) {
-        const tvElement = event.target.closest('.movie');
+        const tvElement = event.target.closest('.movie[data-type="tv"]');
         if (tvElement) {
-            const tvData = series.results.find(tv => tv.name === tvElement.querySelector("p").textContent);
-            loadDetailsModalTV(tvData);
+            const tvId = tvElement.getAttribute('data-id');
+            const tvData = series.results.find(tv => `tv-${tv.id}` === tvId);
+            loadDetailsModal(tvData, false);
         }
     });
+
+    // Append the new content instead of replacing it
+    contenedor_de_peliculas.appendChild(fragmento);
 }
 
-function clearScreen() { //Limpiar la pantalla cuando se presione el botón principal
+function clearScreen() {
     const contenedor_de_peliculas = document.querySelector(".movies-container");
     contenedor_de_peliculas.innerHTML = "";
 }
@@ -150,6 +140,9 @@ function loadDetailsModal(data, isMovie) {
     modalBody.innerHTML = ''; // Clear previous modal content
 
     const modalContent = document.createElement('div');
+
+    // Extract the correct data ID based on the type (movie or TV)
+    const dataId = `#${isMovie ? 'movie' : 'tv'}-${data.id}`;
 
     // Check if the necessary properties exist in the data object
     if (data.poster_path && data.overview && (isMovie ? data.release_date : data.first_air_date)) {
@@ -165,10 +158,14 @@ function loadDetailsModal(data, isMovie) {
 
     const addToCollectionButton = document.getElementById('collection-button');
 
-    addToCollectionButton.addEventListener('click', function () {
+    // Remove previous click event listener to avoid multiple executions
+    addToCollectionButton.onclick = null;
+
+    // Add a new click event listener
+    addToCollectionButton.onclick = function () {
         addToPersonalCollection(data); // Use 'data' instead of 'movie'
-        alert('Movie added to your collection!');
-    });
+        alert('Movie/TV series added to your collection!');
+    };
 
     modalBody.appendChild(modalContent);
 
@@ -177,7 +174,6 @@ function loadDetailsModal(data, isMovie) {
     // modal.show();
 }
 
-// Usage example
 function loadDetailsModalMovie(movie) {
     loadDetailsModal(movie, true);
 }
@@ -185,4 +181,3 @@ function loadDetailsModalMovie(movie) {
 function loadDetailsModalTV(tv) {
     loadDetailsModal(tv, false);
 }
-
