@@ -74,7 +74,8 @@
         </div>
         <div class="modal-footer d-flex justify-content-evenly">
           <button type="button" class="btn btn-primary" id="collection-button">Agregar a colección</button>
-          <button type="button" class="btn btn-secondary" style="background-color: #198754;">Compartir</button>
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#shareModal"
+            style="background-color: #198754;">Compartir</button>
           <button type="button" class="btn btn-tertiary" style="background-color: #ffc107;">Agregar comentario</button>
         </div>
       </div>
@@ -82,6 +83,25 @@
   </div>
 
   <!-- Modal para comentarios -->
+
+  <!-- Modal for Sharing -->
+  <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="shareModalLabel">Compartir</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="shareLink"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 
 

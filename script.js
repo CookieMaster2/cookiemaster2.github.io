@@ -181,3 +181,32 @@ function loadDetailsModalMovie(movie) {
 function loadDetailsModalTV(tv) {
     loadDetailsModal(tv, false);
 }
+
+// Add the event listener to the "Compartir" button
+const shareButton = document.getElementById('share-button');
+shareButton.addEventListener('click', function () {
+    const shareLink = getShareLink(); // Implement this function to get the share link
+    updateShareModal(shareLink);
+});
+
+// Function to get the share link (replace this with the actual link generation logic)
+function getShareLink() {
+    // Implement your logic to get the share link based on the selected movie
+    // For example, you can use the movie ID or other unique identifier
+    const selectedMovieId = getSelectedMovieId(); // Implement this function to get the selected movie ID
+    return `https://example.com/movie/${selectedMovieId}`;
+}
+
+// Function to update the share modal content
+function updateShareModal(shareLink) {
+    const shareLinkParagraph = document.getElementById('shareLink');
+    shareLinkParagraph.textContent = `Compartir este enlace: ${shareLink}`;
+}
+
+// Function to get the selected movie ID (replace this with the actual logic)
+function getSelectedMovieId() {
+    // Implement your logic to get the selected movie ID
+    // For example, you can use data attributes or other properties of the selected movie
+    const selectedMovieElement = document.querySelector('.movie'); // Update this selector based on your structure
+    return selectedMovieElement.dataset.id; // Adjust this property based on your movie ID property
+}

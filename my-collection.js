@@ -32,12 +32,12 @@ function displayCollection(personalCollection) {
         if (movieElement) {
             const movieIndex = movieElement.dataset.index;
             const movieDetails = personalCollection[movieIndex];
-            loadDetailsModal(movieDetails);
+            loadDetailsModal(movieDetails, movieIndex);
         }
     });
 }
 
-function loadDetailsModal(data) {
+function loadDetailsModal(data, index) {
     const modalTitle = document.getElementById('collectionModalLabel');
     const modalBody = document.querySelector('.modal-body');
 
@@ -60,6 +60,26 @@ function loadDetailsModal(data) {
 
     modalBody.appendChild(modalContent);
 
+    const deleteFromCollectionButton = document.getElementById('delete-element');
+
+    deleteFromCollectionButton.onclick = function () {
+        removeFromPersonalCollection(index);
+        alert('Movie/TV series removed from your collection!');
+        const modal = new bootstrap.Modal(document.getElementById('movieModal'));
+        modal.hide();
+        element.reload();
+    };
+
     const modal = new bootstrap.Modal(document.getElementById('movieModal'));
     modal.show();
+}
+
+// Example removeFromPersonalCollection function
+function removeFromPersonalCollection(index) {
+    const storedMovies = localStorage.getItem('personalCollection');
+    if (storedMovies) {
+        const movies = JSON.parse(storedMovies);
+        movies.splice(index, 1);
+        localStorage.setItem('personalCollection', JSON.stringify(movies));
+    }
 }
