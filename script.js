@@ -1,3 +1,5 @@
+import { addToPersonalCollection } from "./moviestorage.js";
+
 document.addEventListener('DOMContentLoaded', function () {
     const busqueda = document.querySelector("#busqueda");
     busqueda.addEventListener('input', debounce(searchMovies, 500)); // función 'Debounce' para mejor desempeño
@@ -143,10 +145,10 @@ function clearScreen() { //Limpiar la pantalla cuando se presione el botón prin
 function loadDetailsModal(data, isMovie) {
     const modalTitle = document.getElementById('movieModalLabel');
     const modalBody = document.querySelector('.modal-body');
-    
+
     modalTitle.textContent = isMovie ? data.title : data.name;
     modalBody.innerHTML = ''; // Clear previous modal content
-    
+
     const modalContent = document.createElement('div');
 
     // Check if the necessary properties exist in the data object
@@ -161,10 +163,17 @@ function loadDetailsModal(data, isMovie) {
         modalContent.textContent = 'Details not available.';
     }
 
+    const addToCollectionButton = document.getElementById('collection-button');
+
+    addToCollectionButton.addEventListener('click', function () {
+        addToPersonalCollection(data); // Use 'data' instead of 'movie'
+        alert('Movie added to your collection!');
+    });
+
     modalBody.appendChild(modalContent);
 
     // Show the modal
-    const modal = new bootstrap.Modal(document.getElementById('movieModal'));
+    // const modal = new bootstrap.Modal(document.getElementById('movieModal'));
     // modal.show();
 }
 

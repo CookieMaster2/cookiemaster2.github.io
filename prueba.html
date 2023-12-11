@@ -4,38 +4,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modal Example</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <title>Mi colección</title>
+
+
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/777/777242.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
 <body>
 
-    <div class="container">
-        <!-- Barra de navegación -->
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #fd7e14;">
+    <div class="master-container">
+
+        <div class="navbar navbar-expand-lg navbar-dark" style="background-color: #fd7e14;">
             <div class="container-fluid">
                 <a class="navbar-brand" href="index.html" onclick="clearScreen()">Movie & Shows Manager</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="prueba.html">Mi colección</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                            id="busqueda">
-                    </form>
-                </div>
             </div>
-        </nav>
+        </div>
+
+        <div class="collection-container">
+
+        </div>
+
+
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Template para las películas de la colección -->
+
+    <template id="template-container">
+        <div class="movie" data-bs-toggle="modal" data-bs-target="#collectionModal">
+            <div class="poster-pelicula">
+                <img src="" alt="">
+            </div>
+            <div class="informacion">
+                <p></p>
+            </div>
+        </div>
+    </template>
+
+    <!-- Modal para la colección -->
+
+    <div class="modal fade" id="collectionModal" tabindex="-1" aria-labelledby="collectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="collectionModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Eliminar de colección</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
+
+<script type="module" src="script.js"></script>
+<script type="module" src="moviestorage.js"></script>
+<script type="module" src="my-collection.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 
 </html>
