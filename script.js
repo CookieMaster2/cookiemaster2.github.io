@@ -1,8 +1,55 @@
 import { addToPersonalCollection } from "./moviestorage.js";
+import { addComment } from './comments.js';
 
-document.addEventListener('DOMContentLoaded', function () {
+let selectedMovieTitle = '';
+
+document.addEventListener('DOMContentLoaded', function () { //Barra de búsqueda
     const busqueda = document.querySelector("#busqueda");
     busqueda.addEventListener('input', debounce(searchMovies, 500));
+});
+
+document.addEventListener('DOMContentLoaded', function () { //Compartir link
+    const shareButton = document.getElementById('share-button');
+    shareButton.addEventListener('click', function () {
+        const shareLink = getShareLink(); // Implement this function to get the share link
+        updateShareModal(shareLink);
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const moviesContainer = document.querySelector('.movies-container');
+    moviesContainer.addEventListener('click', function (event) {
+        const movieElement = event.target.closest('.movie');
+        if (movieElement) {
+            // Update the selectedMovieTitle when a movie is clicked
+            selectedMovieTitle = movieElement.querySelector('.informacion p').textContent;
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () { //Añadir comentario
+
+    // Handle form submission for adding comments
+    const commentForm = document.getElementById('commentForm');
+    commentForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Get values from the form
+        const commentTitle = document.getElementById('commentTitle').value;
+        const commentText = document.getElementById('commentText').value;
+        const commentRating = document.getElementById('commentRating').value;
+
+        // Add the comment using the imported function
+        addComment(selectedMovieTitle, commentTitle, commentText, commentRating);
+
+        // Clear the form
+        commentForm.reset();
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Display comments in Bootstrap cards
+    displayComments();
 });
 
 function debounce(func, delay) {
@@ -182,24 +229,17 @@ function loadDetailsModalTV(tv) {
     loadDetailsModal(tv, false);
 }
 
-// Add the event listener to the "Compartir" button
-const shareButton = document.getElementById('share-button');
-shareButton.addEventListener('click', function () {
-    const shareLink = getShareLink(); // Implement this function to get the share link
-    updateShareModal(shareLink);
-});
-
 // Function to get the share link (replace this with the actual link generation logic)
 function getShareLink() {
     // Implement your logic to get the share link based on the selected movie
     // For example, you can use the movie ID or other unique identifier
     const selectedMovieId = getSelectedMovieId(); // Implement this function to get the selected movie ID
-    return `https://example.com/movie/${selectedMovieId}`;
+    return `https://movieadmin.com/movie/${selectedMovieId}`;
 }
 
 // Function to update the share modal content
 function updateShareModal(shareLink) {
-    const shareLinkParagraph = document.getElementById('shareLink');
+    const shareLinkParagraph = document.getElementById('shareModalLabel');
     shareLinkParagraph.textContent = `Compartir este enlace: ${shareLink}`;
 }
 
@@ -209,4 +249,56 @@ function getSelectedMovieId() {
     // For example, you can use data attributes or other properties of the selected movie
     const selectedMovieElement = document.querySelector('.movie'); // Update this selector based on your structure
     return selectedMovieElement.dataset.id; // Adjust this property based on your movie ID property
+}
+
+function displayComments() {
+    // Retrieve comments from local storage
+    const comments = JSON.parse(localStorage.getItem('movieComments')) || [];
+
+    // Get the container where you want to display the cards
+    const commentsContainer = document.getElementById('commentsContainer');
+
+    // Clear existing content
+    commentsContainer.innerHTML = '';
+
+    // Iterate over comments and create Bootstrap cards
+    comments.forEach(comment => {
+        const card = document.createElement('div');
+        card.classList.add('card', 'mb-3');
+
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+
+        // Card title (movie)
+        const cardTitle = document.createElement('h5');
+        cardTitle.classList.add('card-title');
+        cardTitle.textContent = comment.movieTitle;
+
+        // Card subtitle (comment title)
+        const cardSubtitle = document.createElement('h6');
+        cardSubtitle.classList.add('card-subtitle', 'mb-2', 'text-muted');
+        cardSubtitle.textContent = comment.commentTitle;
+
+        // Card text (comment)
+        const cardText = document.createElement('p');
+        cardText.classList.add('card-text');
+        cardText.textContent = comment.commentText;
+
+        // Card rating
+        const cardRating = document.createElement('p');
+        cardRating.classList.add('card-text');
+        cardRating.textContent = `Rating: ${comment.commentRating} ⭐`;
+
+        // Append elements to card body
+        cardBody.appendChild(cardTitle);
+        cardBody.appendChild(cardSubtitle);
+        cardBody.appendChild(cardText);
+        cardBody.appendChild(cardRating);
+
+        // Append card body to card
+        card.appendChild(cardBody);
+
+        // Append card to container
+        commentsContainer.appendChild(card);
+    });
 }

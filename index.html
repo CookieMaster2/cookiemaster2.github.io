@@ -13,8 +13,6 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <!--bootstrap-->
 
-
-
 </head>
 
 <body>
@@ -33,6 +31,9 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="prueba.html">Mi colección</a>
+            </li>
+            <li class="nav-item">
+              <a href="comentarios.html" class="nav-link active" aria-current="page">Comentarios</a>
             </li>
           </ul>
           <form class="d-flex">
@@ -75,14 +76,43 @@
         <div class="modal-footer d-flex justify-content-evenly">
           <button type="button" class="btn btn-primary" id="collection-button">Agregar a colección</button>
           <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#shareModal"
-            style="background-color: #198754;">Compartir</button>
-          <button type="button" class="btn btn-tertiary" style="background-color: #ffc107;">Agregar comentario</button>
+            style="background-color: #198754;" id="share-button">Compartir</button>
+          <button type="button" class="btn btn-tertiary" style="background-color: #ffc107;" data-bs-toggle="modal"
+            data-bs-target="#commentModal" id="comment-button">Agregar comentario</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal para comentarios -->
+  <!-- Modal for Adding Comments -->
+  <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentModalLabel">Agregar Comentario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="commentForm">
+            <div class="mb-3">
+              <label for="commentTitle" class="form-label">Título:</label>
+              <input type="text" class="form-control" id="commentTitle" required>
+            </div>
+            <div class="mb-3">
+              <label for="commentText" class="form-label">Comentario:</label>
+              <textarea class="form-control" id="commentText" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="commentRating" class="form-label">Calificación (1-5):</label>
+              <input type="number" class="form-control" id="commentRating" min="1" max="5" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Modal for Sharing -->
   <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
@@ -92,9 +122,6 @@
           <h5 class="modal-title" id="shareModalLabel">Compartir</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <p id="shareLink"></p>
-        </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>
@@ -102,16 +129,12 @@
     </div>
   </div>
 
-
-
-
-
-
 </body>
 <script type="module" src="script.js"></script>
 <script type="module" src="moviestorage.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <!--bootstrap-->
+<script type="module" src="comments.js"></script>
 
 </html>
