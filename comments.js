@@ -25,3 +25,5 @@ export function addComment(movieTitle, commentTitle, commentText, commentRating)
     // For example, update the UI or store the comment in local storage
     console.log('Comment added:', comment);
 }
+
+// module.exports = { addComment }

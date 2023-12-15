@@ -1,0 +1,34 @@
+{
+  "name": "calidad-webapp",
+  "version": "1.0.0",
+  "description": "Repositorio para la webapp de Calidad y Metodologías Ágiles, proyecto ordinario",
+  "main": "comments.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.23.6",
+    "@babel/preset-env": "^7.23.6",
+    "babel-jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-localstorage-mock": "^2.4.26",
+    "jsdom": "^23.0.1",
+    "node-fetch": "^3.3.2"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFiles": [
+      "../CALIDAD WEBAPP/jest.setup.js"
+    ],
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    },
+    "dependencies": {
+      "text-encoding": "^0.7.0"
+    }
+  }
+}

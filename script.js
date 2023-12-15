@@ -63,13 +63,14 @@ function debounce(func, delay) {
 }
 
 async function searchMovies() {
+    const busqueda = document.querySelector("#busqueda");
     const query = busqueda.value.trim();
 
     const contenedor_de_peliculas = document.querySelector(".movies-container");
 
     if (query === '') {
         console.log("empty query!");
-        contenedor_de_peliculas.innerHTML = "";
+        // contenedor_de_peliculas.innerHTML = "";
         return;
     }
 
@@ -91,7 +92,7 @@ async function searchMovies() {
         getTv(tv);
 
     } catch (error) {
-        console.log(error);
+        console.error('API Error:', error);
     }
 }
 
@@ -215,10 +216,6 @@ function loadDetailsModal(data, isMovie) {
     };
 
     modalBody.appendChild(modalContent);
-
-    // Show the modal
-    // const modal = new bootstrap.Modal(document.getElementById('movieModal'));
-    // modal.show();
 }
 
 function loadDetailsModalMovie(movie) {
@@ -302,3 +299,16 @@ function displayComments() {
         commentsContainer.appendChild(card);
     });
 }
+
+// module.exports = {
+//     debounce,
+//     searchMovies,
+//     getMovies,
+//     getTv,
+//     clearScreen,
+//     loadDetailsModal,
+//     getShareLink,
+//     updateShareModal,
+//     getSelectedMovieId,
+//     displayComments,
+// };

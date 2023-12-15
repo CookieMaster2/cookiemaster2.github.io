@@ -35,3 +35,9 @@ function savePersonalCollection(collection) {
 export function clearPersonalCollection() {
   localStorage.removeItem('personalCollection');
 }
+
+// module.exports = {
+//   addToPersonalCollection,
+//   getPersonalCollection,
+//   clearPersonalCollection
+// }
